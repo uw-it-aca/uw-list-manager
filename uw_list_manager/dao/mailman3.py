@@ -11,7 +11,6 @@ class Mailman3:
         self._dao = Mailman3()
         super(Mailman3, self).__init__(*args, **kwargs)
 
-
     def get_list_existance_by_name(self, list_name):
         """
         Query mailman3 server for list_id

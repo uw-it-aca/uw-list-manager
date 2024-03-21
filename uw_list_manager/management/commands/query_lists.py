@@ -11,11 +11,12 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            'setting', type=str, help='The setting to query for')
+            'settings', type=str,
+            help='Comma delimited list of list settings to query')
 
     def handle(self, *args, **options):
-        setting = options['setting']
-        self.mailman3 = Mailman3()
-        for l in self.mailman3.get_all_lists():
-            print(f"{l.name}: {settings} = "
-                  f"{l.mailman3.get_list_sub_resource(l.name, setting)}")
+        settings = options.get('settings', '').split(',')
+        for l in Mailman3().get_all_lists():
+            for setting in settings:
+                print(f"{l.name}: {setting} = "
+                      f"{l.mailman3.get_list_sub_resource(l.name, setting)}")
