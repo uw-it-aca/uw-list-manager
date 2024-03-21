@@ -1,1 +1,2 @@
 -e .
+git+https://github.com/uw-it-aca/uw-restclients-mailman3@develop#egg=uw-restclients-mailman3

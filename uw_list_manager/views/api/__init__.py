@@ -10,7 +10,7 @@ from coursedashboards.dao.user import get_current_user
 from coursedashboards.views.error import _make_response, MYUW_DATA_ERROR
 
 
-class UWListMangagerPI(APIView):
+class UWListMangagerAPI(APIView):
 
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
