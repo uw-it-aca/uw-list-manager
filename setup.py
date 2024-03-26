@@ -1,5 +1,5 @@
 import os
-from setuptools import setup
+from setuptools import setup, find_packages
 
 README = """
 See the README on `GitHub
@@ -16,7 +16,7 @@ url = "https://github.com/uw-it-aca/uw-list-manager"
 setup(
     name='UW-List-Manager',
     version=VERSION,
-    packages=['uw_list_manager'],
+    packages=find_packages(),
     author="UW-IT T&LS",
     author_email="aca-it@uw.edu",
     include_package_data=True,
