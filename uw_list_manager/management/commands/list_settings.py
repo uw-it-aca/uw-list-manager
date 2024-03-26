@@ -4,7 +4,9 @@
 
 from django.core.management.base import BaseCommand
 from django_mailman3.lib.mailman import get_mailman_client
+import re
 import logging
+
 
 logging.getLogger().setLevel(logging.INFO)
 
@@ -42,9 +44,13 @@ class Command(BaseCommand):
 
             for mlist in lists:
                 for setting in settings:
-                    setting_name, new_value = setting.split('=')
+                    values = re.match(r'^([^=]+)(=([^=]+))?$', setting)
+                    setting_name = values.group(1)
+                    new_value = values.group(3)
+
                     print(f"{mlist.list_name}: "
                           f"{setting_name} is {mlist.settings[setting_name]}")
+
                     if new_value:
                         actual_value = True if (
                             new_value == 'True') else False if (
