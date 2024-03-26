@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from uw_list_manager.views.api import UWListManagerAPI
-from django_mailman3.lib.mailman import get_mailman_client
 from uw_list_manager.dao.mailman2 import Mailman2
 from uw_list_manager.dao.mailman3 import Mailman3
 from urllib.error import HTTPError
