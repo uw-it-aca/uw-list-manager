@@ -1,7 +1,6 @@
 # Copyright 2024 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
-from django.conf import settings
 from restclients_core.dao import DAO
 from restclients_core.exceptions import DataFailureException
 from uw_list_manager.models import ListExists
@@ -16,8 +15,8 @@ logger = logging.getLogger(__name__)
 
 class Mailman2:
     def __init__(self):
-        self._key = settings.get('MAILMAN2_REST_KEY')
         self._dao = Mailman2_DAO()
+        self._key = self._dao.get_service_setting("REST_KEY", None)
 
     def list_url(self, uwnetid):
         raise Exception("Not implemented")
