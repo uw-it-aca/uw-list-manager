@@ -21,6 +21,7 @@ setup(
     author_email="aca-it@uw.edu",
     include_package_data=True,
     install_requires=[
+        'UW-RestClients-Mailman~=1.0',
         'djangorestframework==3.15.0',],
     license='Apache License, Version 2.0',
     description=('An application to intaract with mailman lists at the '
