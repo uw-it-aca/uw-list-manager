@@ -75,5 +75,5 @@ class  Mailman2_DAO(DAO):
             if ex.status != 404:
                 raise ex
 
-        raise ListNotFound(list_name)
+        raise ListNotFound()
 
