@@ -6,6 +6,7 @@ from uw_list_manager.dao.mailman2 import Mailman2
 from uw_list_manager.dao.mailman3 import Mailman3
 from urllib.error import HTTPError
 
+
 class ListExistsView(UWListManagerAPI):
     """
     Class to query mail list existance

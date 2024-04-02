@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from rest_framework.views import APIView
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 
