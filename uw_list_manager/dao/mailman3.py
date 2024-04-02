@@ -36,7 +36,7 @@ class Mailman3:
 
     def _list_admin_url(self, mlist):
         return (f"https://{mlist.mail_host}/postorius/"
-                f"lists/{mlist.list_id}/") if mlist else None
+                f"lists/{mlist.list_id}/") if mlist else ""
 
     def _get_list(self, list_name):
         try:

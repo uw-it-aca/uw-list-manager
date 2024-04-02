@@ -37,7 +37,7 @@ class Mailman2:
         """
         url = self.list_existance_url(list_name)
         exists = False
-        admin_url = None
+        admin_url = ""
         try:
             response = self._dao.get_resource(url)
             exists = response.get("Available", "True") == "False"
