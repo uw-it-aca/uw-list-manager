@@ -5,9 +5,9 @@ from restclients_core import models
 
 
 class ListExists(models.Model):
-    list_name = models.CharField(max_length=128)
+    list_name = models.CharField(max_length=256)
     exists = models.BooleanField()
-    admin_url = models.CharField(max_length=200, null=True)
+    admin_url = models.CharField(max_length=256, null=True)
 
     def json_data(self):
         return {
