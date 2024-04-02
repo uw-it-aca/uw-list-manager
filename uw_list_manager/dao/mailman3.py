@@ -3,6 +3,7 @@
 
 from django_mailman3.lib.mailman import get_mailman_client
 from uw_list_manager.models import ListExists
+from urllib.error import HTTPError
 
 
 class Mailman3:
@@ -18,17 +19,29 @@ class Mailman3:
         for the given list name string
         @param list_name: a non_empty string
         """
-        exists = False
-        admin_url = None
-        try:
-            mlist = self._client.get_list(list_name)
-            admin_url = mlist.self_link
-            exists = True
-        except HTTPError as ex:
-            if ex.code == 404:
-                pass
-            else:
-                raise
+        if '@' not in list_name:
+            for domain in self._client.domains:
+                mlist = self._get_list(
+                    f"{list_name}@{domain.mail_host}")
+                if mlist:
+                    break
+        else:
+            mlist = self._get_list(list_name)
 
         return ListExists(
-            list_name=list_name, exists=exists, admin_url=admin_url)
+            list_name=mlist.fqdn_listname if mlist else list_name,
+            exists=mlist is not None,
+            admin_url=self._list_admin_url(mlist))
+
+    def _list_admin_url(self, mlist):
+        return (f"https://{mlist.mail_host}/postorius/"
+                f"lists/{mlist.list_id}/") if mlist else None
+
+    def _get_list(self, list_name):
+        try:
+            return self._client.get_list(list_name)
+        except HTTPError as ex:
+            if ex.code == 404:
+                return None
+            else:
+                raise

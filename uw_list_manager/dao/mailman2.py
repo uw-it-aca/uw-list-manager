@@ -4,7 +4,7 @@
 from restclients_core.dao import DAO
 from restclients_core.exceptions import DataFailureException
 from uw_list_manager.models import ListExists
-from uw_mailman3.exceptions import ListNotFound
+from uw_list_manager.exceptions import ListNotFound
 import logging
 import json
 import os
@@ -40,7 +40,7 @@ class Mailman2:
         admin_url = None
         try:
             response = self._dao.get_resource(url)
-            exists = response.data.get("Available", "True") == "False"
+            exists = response.get("Available", "True") == "False"
             if exists:
                 admin_url = self.list_admin_url(list_name)
         except ListNotFound:
@@ -64,8 +64,8 @@ class  Mailman2_DAO(DAO):
             logger.debug("GET {} ==status==> {}".format(url, response.status))
 
             if response.status == 200:
-                logger.debug("GET {} ==data==> {}".format(url, response_data))
-                return json.loads(str(response.data))
+                logger.debug("GET {} ==data==> {}".format(url, response.data))
+                return json.loads(response.data.decode('utf-8'))
 
             if response.status != 404:
                 raise DataFailureException(
