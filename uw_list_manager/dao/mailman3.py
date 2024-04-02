@@ -19,6 +19,7 @@ class Mailman3:
         for the given list name string
         @param list_name: a non_empty string
         """
+        mlist = None
         if '@' not in list_name:
             for domain in self._client.domains:
                 mlist = self._get_list(
