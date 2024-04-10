@@ -28,40 +28,65 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        settings = options.get('settings', '').split(',')
+        raw_settings = options.get('settings', '').split(',')
         commit = options.get('commit', False)
         client = get_mailman_client()
+
+        settings = self.parse_settings(raw_settings)
 
         page_number = 1
         page_count = 500
 
         while page_number > 0:
-            lists = client.get_list_page(
-                count=page_count, page=page_number)
+            lists = client.get_list_page(count=page_count, page=page_number)
 
             if len(lists) == 0:
                 break
 
             for mlist in lists:
+                changes = False
                 for setting in settings:
-                    values = re.match(r'^([^=]+)(=([^=]+))?$', setting)
-                    setting_name = values.group(1)
-                    new_value = values.group(3)
+                    name = setting['name']
+                    new_value = setting['value']
 
-                    print(f"{mlist.list_name}: "
-                          f"{setting_name} is {mlist.settings[setting_name]}")
+                    if new_value is None:
+                        print(f"{mlist.list_name}: "
+                              f"{name} is {current_value}")
+                    else:
+                        current_value = mlist.settings[name]
 
-                    if new_value:
-                        actual_value = True if (
-                            new_value == 'True') else False if (
-                                new_value == 'False') else new_value
+                        if new_value == current_value:
+                            continue
 
-                        if commit:
-                            mlist.settings[setting_name] = actual_value
-                            mlist.settings.save()
+                        mlist.settings[name] = new_value
+                        changes = True
 
-                        print(f"{mlist.list_name}: {setting_name} "
+                        print(f"{mlist.list_name}: {name} "
                               f"{'changed to' if commit else 'would be'} "
-                              f"{actual_value}")
+                              f"{new_value}")
+
+                if changes and commit:
+                    mlist.settings.save()
+                    print(f"{mlist.list_name}: settings saved")
 
             page_number += 1
+
+    def parse_settings(self, raw_settings):
+        settings = []
+        for setting in raw_settings:
+            values = re.match(r'^([^=]+)(=([^=]+))?$', setting)
+
+            if not values:
+                raise ValueError(
+                    f"Invalid setting format: {setting}. "
+                    "Use <name> or <name>=<value>.")
+
+            name = values.group(1)
+            raw_value = values.group(3)
+            new_value = None if raw_value is None else True if (
+                raw_value.lower() == 'true') else False if (
+                    raw_value.lower() == 'false') else raw_value
+
+            settings.append({'name': name, 'value': new_value})
+
+        return settings
