@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from restclients_core import models
+import json
 
 
 class ListExists(models.Model):
@@ -17,4 +18,4 @@ class ListExists(models.Model):
         }
 
     def __str__(self):
-        return self.json_data()
+        return json.dumps(self.json_data())
